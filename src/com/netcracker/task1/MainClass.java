@@ -34,10 +34,10 @@ public class MainClass {
 
         System.out.println("Add into MyLinkedList: " + ExecutionTime.addTime(myList1, 1000));
         System.out.println("Add into LinkedList: " + ExecutionTime.addTime(list, 1000));
-        System.out.println("===========");
+        System.out.println("_________________________________________");
         System.out.println("Search MyLinkedList: " + ExecutionTime.indexOfTime(myList1, 150));
         System.out.println("Search LinkedList: " + ExecutionTime.indexOfTime(list, 150));
-        System.out.println("===========");
+        System.out.println("_________________________________________");
         System.out.println("Remove MyLinkedList: " + ExecutionTime.removeTime(myList1, 150));
         System.out.println("Remove LinkedList: " + ExecutionTime.removeTime(list, 150));
 
