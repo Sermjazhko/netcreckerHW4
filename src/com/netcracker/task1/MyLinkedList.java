@@ -192,7 +192,7 @@ public class MyLinkedList<E> implements ILinkedList<E> {
 
     @Override
     public String toString() {
-        String result = "MyLinkedList{";
+        String result = "{";
         if (isEmpty()) result += "}";
         else {
             result += first.getElement().toString();
