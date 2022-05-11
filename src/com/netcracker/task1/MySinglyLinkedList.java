@@ -2,23 +2,19 @@ package com.netcracker.task1;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
-/* Пока реализовала двусвязный список для сравнения с LickedList */
-
-public class MyLinkedList<E> implements ILinkedList<E> {
+// Односвязный
+public class MySinglyLinkedList<E>  implements ILinkedList<E>{
 
     private class Node<E> {
         E element;
-        Node<E> previous;
         Node<E> next;
 
         public Node(E element) {
             this.element = element;
         }
 
-        public Node(E element, Node<E> previous, Node<E> next) {
+        public Node(E element,  Node<E> next) {
             this.element = element;
-            this.previous = previous;
             this.next = next;
         }
 
@@ -28,14 +24,6 @@ public class MyLinkedList<E> implements ILinkedList<E> {
 
         public void setElement(E element) {
             this.element = element;
-        }
-
-        public Node<E> getPrevious() {
-            return previous;
-        }
-
-        public void setPrevious(Node<E> previous) {
-            this.previous = previous;
         }
 
         public Node<E> getNext() {
@@ -55,7 +43,7 @@ public class MyLinkedList<E> implements ILinkedList<E> {
     public void add(E e) {
         // add to end
         final Node<E> l = last;
-        final Node<E> newNode = new Node<>(e, l, null);
+        final Node<E> newNode = new Node<>(e, null);
         last = newNode;
         // не было элементов в списке
         if (l == null)
@@ -72,13 +60,9 @@ public class MyLinkedList<E> implements ILinkedList<E> {
             add(element);
         else {
             Node cur = first;
-            for (int i = 0; i < index; i++)
+            for (int i = 0; i < index-1; i++)
                 cur = cur.getNext();
-            Node temp = new Node(element, cur.getPrevious(), cur);
-            // даем ссылку старому элементу на новый "предыдущий"
-            cur.setPrevious(temp);
-            // предыдущий для старого элемента ссылается на новый "следующий"
-            cur = temp.getPrevious();
+            Node temp = new Node(element, cur.getNext());
             cur.setNext(temp);
             size++;
         }
@@ -89,7 +73,6 @@ public class MyLinkedList<E> implements ILinkedList<E> {
             Node<E> next = cur.next;
             cur.element = null;
             cur.next = null;
-            cur.previous = null;
             cur = next;
         }
         first = last = null;
@@ -125,21 +108,18 @@ public class MyLinkedList<E> implements ILinkedList<E> {
         if (!isElementIndex(index))
             return null;
         Node<E> cur = first;
-        if (index == 0) {
+        if (index == 0){
             first = cur.getNext();
-            cur.getNext().setPrevious(null);
             size--;
             return cur.getElement();
         }
-        cur = getNode(index);
-        // забываем о элементе в списке
-        cur.getPrevious().setNext(cur.getNext());
-        if (index == size - 1)
-            last = cur.getPrevious();
-        else
-            cur.getNext().setPrevious(cur.getPrevious());
+        cur = getNode(index-1);
+        Node<E> res = cur.getNext();
+        if (index == size-1)
+            last = cur;
+        cur.setNext(res.getNext());
         size--;
-        return cur.getElement();
+        return res.getElement();
     }
 
     public E set(int index, E element) {
@@ -165,7 +145,7 @@ public class MyLinkedList<E> implements ILinkedList<E> {
 
     public <T> T[] toArray(T[] a) {
         if (a.length < size)
-            a = (T[]) java.lang.reflect.Array.newInstance(
+            a = (T[])java.lang.reflect.Array.newInstance(
                     a.getClass().getComponentType(), size);
         int i = 0;
         Object[] result = a;
@@ -186,7 +166,7 @@ public class MyLinkedList<E> implements ILinkedList<E> {
         return index >= 0 && index < size;
     }
 
-    public Node<E> getNode(int index) {
+    public Node<E> getNode(int index){
         Node<E> cur = first;
         for (int i = 0; i < index; i++)
             cur = cur.getNext();
